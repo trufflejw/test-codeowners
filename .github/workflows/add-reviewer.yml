@@ -24,25 +24,25 @@ jobs:
             const prettyTeamName = `@${org}/${team}`
 
             function fail(msg) {
-              core.setFailed(msg)
-              process.exit(1)
+              core.setFailed(msg);
+              process.exit(1);
             }
 
             function succeed(msg) {
-              core.setOutput(msg)
-              process.exit(0)
+              core.setOutput(msg);
+              process.exit(0);
             }
 
-            let reviews
+            let reviews;
             try {
               res = await github.rest.pulls.listReviews({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                pull_number: context.payload.pull_request.number
+                pull_number: context.payload.pull_request.number,
               });
-              reviews = res.data
+              reviews = res.data;
             } catch (error) {
-              fail(`⚠️ Could not get reviews: ${error.status}`)
+              fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
             const approvers = reviews.filter(r => r.state == 'APPROVED').map(r => r.user.login);
@@ -60,7 +60,7 @@ jobs:
                 }
               } catch (error) {
                 if (error != 404) {
-                  fail(`⚠️ Could not determine membership for ${approver} in ${prettyTeamName}: ${}`)
+                  fail(`⚠️ Could not determine membership for ${approver} in ${prettyTeamName}`)
                 }
               }
             }
