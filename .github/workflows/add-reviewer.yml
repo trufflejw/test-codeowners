@@ -18,8 +18,8 @@ jobs:
           org: trufflejw
           team: jeffteam
         with:
-          # github-token: ${{ secrets.GH_REVIEW_TOKEN }}
-          github-token: ${{ secrets.GH_APP_TOKEN }}
+          github-token: ${{ secrets.GH_REVIEW_TOKEN }}
+          # github-token: ${{ secrets.GH_APP_TOKEN }}
           script: &runscript |
             const {org, team} = process.env
             const prettyTeamName = `@${org}/${team}`
