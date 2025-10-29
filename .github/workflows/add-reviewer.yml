@@ -59,7 +59,7 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: context.payload.pull_request.number,
               });
-              const laterThan = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
+              const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
               for await (const page of iter) {
                 for (const review of page.data) {
                   const login = review.user.login;
