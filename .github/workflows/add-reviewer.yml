@@ -23,15 +23,30 @@ jobs:
             const team = 'jeffteam';
             const prettyTeamName = `@${org}/${team}`
 
+            function status(state, msg) {
+              await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.payload.pull_request.head.sha,
+                state: 'pending',
+                context: 'product-eng-approval',
+                description: msg,
+              });
+            }
+
             function fail(msg) {
               core.setFailed(msg);
+              status('failed', msg)
               process.exit(1);
             }
 
             function succeed(msg) {
               core.setOutput(msg);
+              status('success', msg)
               process.exit(0);
             }
+
+            status('pending', 'Waiting for approval from ${prettyTeamName} team member')
 
             let reviews;
             try {
