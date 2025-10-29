@@ -15,7 +15,7 @@ jobs:
           ORG: trufflejw
           APPROVER_TEAM: jeffteam
         with:
-          github-token: ${{ secrets.GH_REVIEW_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
           # github-token: ${{ secrets.GH_APP_TOKEN }}
           script: &runscript |
             const { ORG: org, APPROVER_TEAM: team} = process.env
