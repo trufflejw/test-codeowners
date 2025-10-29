@@ -36,10 +36,10 @@ jobs:
             }
 
             async function fail(msg) {
-              core.setFailed(msg);
+              core.setOutput(msg);
               console.error(msg)
               await status('failure', msg)
-              process.exit(1);
+              process.exit(0);
             }
 
             async function succeed(msg) {
@@ -48,6 +48,14 @@ jobs:
               await status('success', msg)
               process.exit(0);
             }
+
+            async function fatal(msg) {
+              core.setFailed(msg);
+              console.error(msg)
+              await status('failure', msg)
+              process.exit(1);
+            }
+
 
             await status('pending', `Waiting for approval from ${prettyTeamName} team member`)
 
@@ -73,7 +81,7 @@ jobs:
                 }
               }
             } catch (error) {
-              await fail(`⚠️ Could not get reviews: ${error.status}`);
+              await fatal(`⚠️ Could not get reviews: ${error.status}`);
             }
 
             let approved = false;
@@ -96,7 +104,7 @@ jobs:
 
               } catch (error) {
                 if (error.status != 404) {
-                  await fail(`⚠️ Could not determine membership for ${login} in ${prettyTeamName}: ${error.status}`)
+                  await fatal(`⚠️ Could not determine membership for ${login} in ${prettyTeamName}: ${error.status}`)
                 }
               }
             }
