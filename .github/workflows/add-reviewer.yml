@@ -19,42 +19,51 @@ jobs:
         with:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
           script: |
-            const teamSlug = "jeffteam";
+            const org = 'trufflejw'
+            const team = 'jeffteam';
+            const prettyTeamName = `@${org}/${team}`
 
+            function fail(msg) {
+              core.setFailed(msg)
+              process.exit(1)
+            }
+
+            function succeed(msg) {
+              core.setOutput(msg)
+              process.exit(0)
+            }
+
+            let reviews
             try {
-              const res = await github.rest.teams.getMembershipForUserInOrg({
-                org: 'trufflejw',
-                team_slug: 'jeffteam',
-                username: 'j2fw',
+              res = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number
               });
-              core.info(`state=${res.data.state}, role=${res.data.role}`);
-            } catch (e) {
-              if (e.status === 404) {
-                core.setFailed(`${USER} is NOT a member of ${PARENT_TEAM} (directly or via child team).`);
-              } else {
-                throw e;
+              reviews = res.data
+            } catch (error) {
+              fail(`⚠️ Could not get reviews: ${error.status}`)
+            }
+
+            const approvers = reviews.filter(r => r.state == 'APPROVED').map(r => r.user.login);
+
+            for (const approver of approvers) {
+              try {
+                const membership = await github.rest.teams.getMembershipForUserInOrg({
+                  org: org,
+                  team_slug: team,
+                  username: approver,
+                }).data;
+
+                if (membership.state == 'active') {
+                  succeed(`✅ Approved by ${approver} on behalf of ${prettyTeamName}`)
+                }
+              } catch (error) {
+                if (error != 404) {
+                  fail(`⚠️ Could not determine membership for ${approver} in ${prettyTeamName}: ${}`)
+                }
               }
             }
 
-            // console.log("BEFORE", context.payload.pull_request.requested_teams.map(t=>t.slug));
-            // try {
-            //   let members = await github.rest.teams.list({org: context.repo.owner});
-            // } catch (error) {
-            //   console.log("failed to list org teams: ${error.message}")
-            // };
-
-            // try {
-            //   await github.rest.pulls.requestReviewers({
-            //     owner: context.repo.owner,
-            //     repo: context.repo.repo,
-            //     pull_number: context.payload.pull_request.number,
-            //     team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
-            //   });
-            //   console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
-            // } catch (error) {
-            //   core.setFailed(`⚠️ Could not request team review: ${error.message}`)
-            // }
-
-            // console.log("AFTER", context.payload.pull_request.requested_teams.map());
-
+            fail(`⚠️ No approvers found from ${prettyTeamName}`)
 
