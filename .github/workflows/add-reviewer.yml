@@ -21,13 +21,8 @@ jobs:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
           # github-token: ${{ secrets.GH_APP_TOKEN }}
           script: &runscript |
-            const {org, team} = process.env
+            const { ORG: org, APPROVER_TEAM: team} = process.env
             const prettyTeamName = `@${org}/${team}`
-
-            const children = await github.rest.teams.listChildInOrg({
-                  org: org,
-                  team_slug: team,
-                });
 
             async function status(state, msg) {
               await github.rest.repos.createCommitStatus({
@@ -56,6 +51,7 @@ jobs:
 
             await status('pending', `Waiting for approval from ${prettyTeamName} team member`)
 
+            // reviews maps reviewer logins to their latest review
             let reviews = {};
             try {
               const iter = octokit.paginate.iterator(github.rest.pulls.listReviews, {
@@ -63,45 +59,49 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: context.payload.pull_request.number,
               });
-
-              // latestReview returns the more recently submitted of 2 reviews
-              const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
-
+              const laterThan = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
               for await (const page of iter) {
                 for (const review of page.data) {
-                  console.log("REVIEW", review)
-                  const login = review.user.login
-                  reviews[login] = (login in reviews) ? latestReview(reviews[login], review) : review
+                  const login = review.user.login;
+                  reviews[login] = (login in reviews) ? latestReview(reviews[login], review) : review;
                 }
               }
             } catch (error) {
               await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
-            console.log("REVIEWERS", reviews)
-
+            let approved = false;
+            let changeRequesters = [];
             for (const login in reviews) {
-              if (reviews[login].state !== 'APPROVED') {
-                continue
-              }
+              let membership;
               try {
-                const membership = await github.rest.teams.getMembershipForUserInOrg({
+                membership = await github.rest.teams.getMembershipForUserInOrg({
                   org: org,
                   team_slug: team,
                   username: login,
                 });
-
-                if (membership.data.state == 'active') {
-                  await succeed(`✅ Approved by ${login} on behalf of ${prettyTeamName}`)
-                }
               } catch (error) {
-                if (error != 404) {
-                  await fail(`⚠️ Could not determine membership for ${login} in ${prettyTeamName}: ${error}`)
+                if (error.status != 404) {
+                  await fail(`⚠️ Could not determine membership for ${login} in ${prettyTeamName}: ${error.status}`)
+                }
+              }
+
+              if (membership.data.state === 'active') {
+                if (reviews[login].state === 'APPROVED') {
+                  approved = true;
+                } else if ((reviews[login].state === 'CHANGES_REQUESTED') {
+                  changeRequesters.push(login);
                 }
               }
             }
 
-            await fail(`⚠️ No approvers found from ${prettyTeamName}`)
+            if (changeRequesters.length > 0) {
+              await fail(`🛠️ Changes requested by: ${changeRequesters.map(c=>`@${login}`).join(", ")}`);
+            } else if (approved) {
+              await succeed(`✅ Approved by ${prettyTeamName}`)
+            }
+            await fail(`👀 Requires approval from ${prettyTeamName}`)
+
 
       - name: Request team review
         uses: actions/github-script@v7
