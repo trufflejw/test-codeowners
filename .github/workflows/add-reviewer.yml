@@ -63,10 +63,6 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: context.payload.pull_request.number,
               });
-              let pages = [];
-              for await (const p of iter) {
-                pages.push(p)
-              }
 
               // latestReview returns the more recently submitted of 2 reviews
               const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
