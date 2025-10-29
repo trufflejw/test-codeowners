@@ -1,2 +1,3 @@
 * @j2fw
 test/* @localsource
+*.txt @j2fw
