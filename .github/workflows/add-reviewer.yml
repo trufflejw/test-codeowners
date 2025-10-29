@@ -81,8 +81,8 @@ jobs:
               await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
-            for (const reviewer in latestReviews) {
-              if (latestReviews[reviewer].state !== 'APPROVED') {
+            for (const login in reviews) {
+              if (reviews[login].state !== 'APPROVED') {
                 continue
               }
               try {
