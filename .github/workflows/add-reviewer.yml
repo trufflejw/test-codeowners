@@ -19,7 +19,7 @@ jobs:
         with:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
           script: |
-            const teamSlug = "devops";
+            const teamSlug = "jeffteam";
             // await github.rest.repos.createCommitStatus({
             //   owner: context.repo.owner,
             //   repo: context.repo.repo,
