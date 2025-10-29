@@ -68,8 +68,7 @@ jobs:
               const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
 
               for await (const page of iter) {
-                console.log("PAGE", page)
-                for (const review of page) {
+                for (const review of page.data) {
                   console.log("REVIEW", review)
                   const login = review.user.login
                   reviews[login] = (login in reviews) ? latestReview(reviews[login], review) : review
