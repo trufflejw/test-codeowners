@@ -37,7 +37,7 @@ jobs:
             async function fail(msg) {
               core.setFailed(msg);
               await status('failed', msg)
-              return msg
+              process.exit(1);
             }
 
             async function succeed(msg) {
