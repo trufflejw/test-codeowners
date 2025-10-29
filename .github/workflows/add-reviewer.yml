@@ -111,7 +111,6 @@ jobs:
             }
             await fail(`⚠️ Requires approval from ${prettyTeamName}`)
 
-
       - name: Request team review
         uses: actions/github-script@v7
         continue-on-error: true
