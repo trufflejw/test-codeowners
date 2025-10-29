@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Request team review
         uses: actions/github-script@v7
+        continue-on-error: true
         env:
           ORG: trufflejw
           APPROVER_TEAM: jeffteam
@@ -113,6 +114,7 @@ jobs:
 
       - name: Request team review
         uses: actions/github-script@v7
+        continue-on-error: true
         env:
           ORG: trufflejw
           APPROVER_TEAM: childteam
