@@ -83,7 +83,7 @@ jobs:
               await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
-            console.log("REVIEWERS", reviewers)
+            console.log("REVIEWERS", reviews)
 
             for (const login in reviews) {
               if (reviews[login].state !== 'APPROVED') {
