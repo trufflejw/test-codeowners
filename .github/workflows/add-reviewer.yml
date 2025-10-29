@@ -8,9 +8,6 @@ on:
 jobs:
   request-team-review:
     runs-on: ubuntu-latest
-    permissions:
-      statuses: write
-      pull-requests: write
     steps:
       - name: Request team review
         uses: actions/github-script@v7
