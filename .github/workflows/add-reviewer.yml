@@ -39,13 +39,11 @@ jobs:
             // });
             try {
               let members = await github.rest.orgs.listMembers({org: context.repo.owner});
-              console.log(members);
             } catch (error) {
               console.log("failed to list org members: ${error.message}")
             }
             try {
               let members = await github.rest.teams.list({org: context.repo.owner});
-              console.log(members);
             } catch (error) {
               console.log("failed to list org teams: ${error.message}")
             }
