@@ -21,27 +21,40 @@ jobs:
           script: |
             const teamSlug = "jeffteam";
 
-            console.log("PAYLOAD", context.payload);
-
-            console.log("BEFORE", context.payload.pull_request.requested_teams);
             try {
-              let members = await github.rest.teams.list({org: context.repo.owner});
-            } catch (error) {
-              console.log("failed to list org teams: ${error.message}")
-            };
-
-            try {
-              await github.rest.pulls.requestReviewers({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: context.payload.pull_request.number,
-                team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
+              const res = await github.rest.teams.getMembershipForUserInOrg({
+                org: trufflejw,
+                team_slug: 'jeffteam',
+                username: 'j2fw',
               });
-              console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
-            } catch (error) {
-              core.setFailed(`⚠️ Could not request team review: ${error.message}`)
+              core.info(`state=${res.data.state}, role=${res.data.role}`);
+            } catch (e) {
+              if (e.status === 404) {
+                core.setFailed(`${USER} is NOT a member of ${PARENT_TEAM} (directly or via child team).`);
+              } else {
+                throw e;
+              }
             }
 
-            console.log("AFTER", context.payload.pull_request.requested_teams);
+            // console.log("BEFORE", context.payload.pull_request.requested_teams.map(t=>t.slug));
+            // try {
+            //   let members = await github.rest.teams.list({org: context.repo.owner});
+            // } catch (error) {
+            //   console.log("failed to list org teams: ${error.message}")
+            // };
+
+            // try {
+            //   await github.rest.pulls.requestReviewers({
+            //     owner: context.repo.owner,
+            //     repo: context.repo.repo,
+            //     pull_number: context.payload.pull_request.number,
+            //     team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
+            //   });
+            //   console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
+            // } catch (error) {
+            //   core.setFailed(`⚠️ Could not request team review: ${error.message}`)
+            // }
+
+            // console.log("AFTER", context.payload.pull_request.requested_teams.map());
 
 
