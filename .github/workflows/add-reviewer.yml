@@ -46,7 +46,7 @@ jobs:
               process.exit(0);
             }
 
-            await status('pending', 'Waiting for approval from ${prettyTeamName} team member')
+            await status('pending', `Waiting for approval from ${prettyTeamName} team member`)
 
             let reviews;
             try {
