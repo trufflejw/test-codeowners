@@ -59,6 +59,12 @@ jobs:
                 repo: context.repo.repo,
                 pull_number: context.payload.pull_request.number,
               });
+
+              let pages = [];
+              for await (const page of iter) {
+                pages.push(page)
+              }
+
               const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
               for await (const page of iter) {
                 for (const review of page.data) {
