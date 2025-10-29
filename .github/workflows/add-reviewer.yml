@@ -92,7 +92,7 @@ jobs:
                 if (reviews[login].state === 'APPROVED') {
                   console.log("APPROVED")
                   approved = true;
-                } else if ((reviews[login].state === 'CHANGES_REQUESTED') {
+                } else if (reviews[login].state === 'CHANGES_REQUESTED') {
                   console.log("CHANGES_REQUESTED")
                   changeRequesters.push(login);
                 } else {
@@ -102,7 +102,7 @@ jobs:
             }
 
             if (changeRequesters.length > 0) {
-              await fail(`🛠️ Changes requested by: ${changeRequesters.map(c=>`@${login}`).join(", ")}`);
+              await fail(`🛠️ Changes requested by: ${changeRequesters.map(c=>`@${login}`).join(", ")} on behalf of ${prettyTeamName}`);
             } else if (approved) {
               await succeed(`✅ Approved by ${prettyTeamName}`)
             }
