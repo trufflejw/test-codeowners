@@ -23,7 +23,7 @@ jobs:
             const team = 'jeffteam';
             const prettyTeamName = `@${org}/${team}`
 
-            function status(state, msg) {
+            async function status(state, msg) {
               await github.rest.repos.createCommitStatus({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -34,19 +34,19 @@ jobs:
               });
             }
 
-            function fail(msg) {
+            async function fail(msg) {
               core.setFailed(msg);
-              status('failed', msg)
+              await status('failed', msg)
               process.exit(1);
             }
 
-            function succeed(msg) {
+            async function succeed(msg) {
               core.setOutput(msg);
-              status('success', msg)
+              await status('success', msg)
               process.exit(0);
             }
 
-            status('pending', 'Waiting for approval from ${prettyTeamName} team member')
+            await status('pending', 'Waiting for approval from ${prettyTeamName} team member')
 
             let reviews;
             try {
@@ -57,7 +57,7 @@ jobs:
               });
               reviews = res.data;
             } catch (error) {
-              fail(`⚠️ Could not get reviews: ${error.status}`);
+              await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
             const approvers = reviews.filter(r => r.state == 'APPROVED').map(r => r.user.login);
@@ -71,14 +71,14 @@ jobs:
                 }).data;
 
                 if (membership.state == 'active') {
-                  succeed(`✅ Approved by ${approver} on behalf of ${prettyTeamName}`)
+                  await succeed(`✅ Approved by ${approver} on behalf of ${prettyTeamName}`)
                 }
               } catch (error) {
                 if (error != 404) {
-                  fail(`⚠️ Could not determine membership for ${approver} in ${prettyTeamName}`)
+                  await fail(`⚠️ Could not determine membership for ${approver} in ${prettyTeamName}`)
                 }
               }
             }
 
-            fail(`⚠️ No approvers found from ${prettyTeamName}`)
+            await fail(`⚠️ No approvers found from ${prettyTeamName}`)
 
