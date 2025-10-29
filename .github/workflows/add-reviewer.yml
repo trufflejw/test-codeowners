@@ -42,7 +42,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: context.payload.pull_request.number,
-                team_reviewers: ["devops"]  // Note: team_reviewers for teams
+                team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
               });
               console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
             } catch (error) {
