@@ -28,7 +28,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 sha: context.payload.pull_request.head.sha,
-                state: state,
+                state: 'completed',
                 context: 'product-eng-approval',
                 description: msg,
               });
@@ -36,7 +36,7 @@ jobs:
 
             async function fail(msg) {
               core.setFailed(msg);
-              await status('failed', msg)
+              await status('failure', msg)
               process.exit(1);
             }
 
