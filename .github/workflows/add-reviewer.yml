@@ -14,7 +14,6 @@ jobs:
     steps:
       - name: Request team review
         uses: actions/github-script@v7
-        continue-on-error: true
         env:
           ORG: trufflejw
           APPROVER_TEAM: jeffteam
@@ -110,13 +109,3 @@ jobs:
               await succeed(`✅ Approved by ${prettyTeamName}`)
             }
             await fail(`⚠️ Requires approval from ${prettyTeamName}`)
-
-      - name: Request team review
-        uses: actions/github-script@v7
-        continue-on-error: true
-        env:
-          ORG: trufflejw
-          APPROVER_TEAM: childteam
-        with:
-          github-token: ${{ secrets.GH_REVIEW_TOKEN }}
-          script: *runscript
