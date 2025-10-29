@@ -87,7 +87,7 @@ jobs:
               }
 
               console.log("REVIEWS", reviews)
-              if (membership.data.state === 'active') {
+              if (membership.state === 'active') {
                 console.log("ACTIVE", login)
                 if (reviews[login].state === 'APPROVED') {
                   console.log("APPROVED")
