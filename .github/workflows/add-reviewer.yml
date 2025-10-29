@@ -23,7 +23,7 @@ jobs:
 
             try {
               const res = await github.rest.teams.getMembershipForUserInOrg({
-                org: trufflejw,
+                org: 'trufflejw',
                 team_slug: 'jeffteam',
                 username: 'j2fw',
               });
