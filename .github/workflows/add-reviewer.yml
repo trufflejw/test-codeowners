@@ -73,9 +73,8 @@ jobs:
             let approved = false;
             let changeRequesters = [];
             for (const login in reviews) {
-              let membership;
               try {
-                membership = await github.rest.teams.getMembershipForUserInOrg({
+                const membership = await github.rest.teams.getMembershipForUserInOrg({
                   org: org,
                   team_slug: team,
                   username: login,
