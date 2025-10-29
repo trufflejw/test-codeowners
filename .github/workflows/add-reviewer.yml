@@ -80,7 +80,7 @@ jobs:
 
             console.log("REVIEWERS", reviews)
 
-            for (const reviewer in reviews) {
+            for (const login in reviews) {
               if (reviews[login].state !== 'APPROVED') {
                 continue
               }
@@ -88,15 +88,15 @@ jobs:
                 const membership = await github.rest.teams.getMembershipForUserInOrg({
                   org: org,
                   team_slug: team,
-                  username: reviewer,
+                  username: login,
                 });
 
                 if (membership.data.state == 'active') {
-                  await succeed(`✅ Approved by ${reviewer} on behalf of ${prettyTeamName}`)
+                  await succeed(`✅ Approved by ${login} on behalf of ${prettyTeamName}`)
                 }
               } catch (error) {
                 if (error != 404) {
-                  await fail(`⚠️ Could not determine membership for ${reviewer} in ${prettyTeamName}: ${error}`)
+                  await fail(`⚠️ Could not determine membership for ${login} in ${prettyTeamName}: ${error}`)
                 }
               }
             }
