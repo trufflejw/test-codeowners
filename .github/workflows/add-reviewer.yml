@@ -3,7 +3,7 @@ name: PR Approval Check
 on:
   pull_request_review:
     types: [submitted]
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize, review_request_removed]
 
 
@@ -20,6 +20,8 @@ jobs:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
           script: |
             const teamSlug = "jeffteam";
+
+            console.log("PAYLOAD", context.payload);
 
             console.log("BEFORE", context.payload.pull_request.requested_teams);
             try {
