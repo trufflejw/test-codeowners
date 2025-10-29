@@ -103,11 +103,11 @@ jobs:
             }
 
             if (changeRequesters.length > 0) {
-              await fail(`🛠️ Changes requested by: ${changeRequesters.map(c=>`@${login}`).join(", ")} on behalf of ${prettyTeamName}`);
+              await fail(`⚠️ Changes requested by: ${changeRequesters.map(c=>`@${login}`).join(", ")} on behalf of ${prettyTeamName}`);
             } else if (approved) {
               await succeed(`✅ Approved by ${prettyTeamName}`)
             }
-            await fail(`👀 Requires approval from ${prettyTeamName}`)
+            await fail(`⚠️ Requires approval from ${prettyTeamName}`)
 
 
       - name: Request team review
