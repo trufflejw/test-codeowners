@@ -1,0 +1,53 @@
+name: PR Approval Check
+
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+
+jobs:
+  request-team-review:
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      pull-requests: write
+    steps:
+      - name: Request team review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_REVIEW_TOKEN }}
+          script: |
+            const teamSlug = "devops";
+            // await github.rest.repos.createCommitStatus({
+            //   owner: context.repo.owner,
+            //   repo: context.repo.repo,
+            //   sha: context.payload.pull_request.head.sha,
+            //   state: 'success',
+
+            //   context: 'product-eng-approval',
+            //   description: 'yay?'
+            // });
+            // await github.rest.repos.createCommitStatus({
+            //   owner: context.repo.owner,
+            //   repo: context.repo.repo,
+            //   sha: context.payload.pull_request.head.sha,
+            //   state: 'success',
+            //   context: 'product-eng-approval-2',
+            //   description: 'hello'
+            // });
+            try {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                team_reviewers: ["devops"]  // Note: team_reviewers for teams
+              });
+              console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
+            } catch (error) {
+              // Don't fail if team already requested or other non-critical error
+              console.log(`⚠️ Could not request team review: ${error.message}`);
+            }
+
+
