@@ -6,7 +6,6 @@ on:
   pull_request_target:
     types: [opened, reopened, synchronize, review_request_removed]
 
-
 jobs:
   request-team-review:
     runs-on: ubuntu-latest
@@ -28,20 +27,18 @@ jobs:
               console.log("failed to list org teams: ${error.message}")
             };
 
-            // try {
-            //   await github.rest.pulls.requestReviewers({
-            //     owner: context.repo.owner,
-            //     repo: context.repo.repo,
-            //     pull_number: context.payload.pull_request.number,
-            //     team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
-            //   });
-            //   console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
-            // } catch (error) {
-            //   // Don't fail if team already requested or other non-critical error
-            //   console.log(`⚠️ Could not request team review: ${error.message}`);
-            // }
+            try {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
+              });
+              console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
+            } catch (error) {
+              core.setFailed(`⚠️ Could not request team review: ${error.message}`)
+            }
 
             console.log("AFTER", context.payload.pull_request.requested_teams);
-            core.setFailed('Fail!')
 
 
