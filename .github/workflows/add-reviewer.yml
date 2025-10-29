@@ -21,12 +21,12 @@ jobs:
           script: |
             const teamSlug = "jeffteam";
 
-            console.log("BEFORE", context.payload.pull_request.requested_teams)
+            console.log("BEFORE", context.payload.pull_request.requested_teams);
             try {
               let members = await github.rest.teams.list({org: context.repo.owner});
             } catch (error) {
               console.log("failed to list org teams: ${error.message}")
-            }
+            };
 
             # try {
             #   await github.rest.pulls.requestReviewers({
@@ -41,7 +41,7 @@ jobs:
             #   console.log(`⚠️ Could not request team review: ${error.message}`);
             # }
 
-            console.log("AFTER", context.payload.pull_request.requested_teams)
+            console.log("AFTER", context.payload.pull_request.requested_teams);
             core.setFailed('Fail!')
 
 
