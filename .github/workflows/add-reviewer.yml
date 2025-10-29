@@ -1,10 +1,9 @@
 name: PR Approval Check
-
 on:
   pull_request_review:
-    types: [submitted]
-  pull_request_target:
-    types: [opened, reopened, synchronize, review_request_removed]
+    types: [submitted, dismissed]
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   request-team-review:
@@ -15,30 +14,93 @@ jobs:
     steps:
       - name: Request team review
         uses: actions/github-script@v7
+        env:
+          org: trufflejw
+          team: jeffteam
         with:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
-          script: |
-            const teamSlug = "jeffteam";
+          script: &runscript |
+            const {org, team} = process.env
+            const prettyTeamName = `@${org}/${team}`
 
-            console.log("BEFORE", context.payload.pull_request.requested_teams);
-            try {
-              let members = await github.rest.teams.list({org: context.repo.owner});
-            } catch (error) {
-              console.log("failed to list org teams: ${error.message}")
-            };
+            const children = await github.rest.teams.listChildInOrg({
+                  org: org,
+                  team_slug: team,
+                });
 
+            async function status(state, msg) {
+              await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.payload.pull_request.head.sha,
+                state: state,
+                context: `product-eng-approval-${team}`,
+                description: msg,
+              });
+            }
+
+            async function fail(msg) {
+              core.setFailed(msg);
+              console.error(msg)
+              await status('failure', msg)
+              process.exit(1);
+            }
+
+            async function succeed(msg) {
+              core.setOutput(msg);
+              console.info(msg)
+              await status('success', msg)
+              process.exit(0);
+            }
+
+            await status('pending', `Waiting for approval from ${prettyTeamName} team member`)
+
+            let latestReviews = {};
             try {
-              await github.rest.pulls.requestReviewers({
+              const iter = octokit.paginate.iterator(github.rest.pulls.listReviews, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: context.payload.pull_request.number,
-                team_reviewers: ["jeffteam"]  // Note: team_reviewers for teams
               });
-              console.log(`✅ Successfully requested review from @${context.repo.owner}/${teamSlug}`);
+              let pages = [];
+              for await (const p of iter) {
+                pages.push(p)
+              }
+
+              const laterThan = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
+              latestReviews = pages.reduce((acc, page) => page.data.reduce((a, r) => ((!(r.user.login in a) || laterThan(r, a[r.user.login]) ? { ...a, [r.user.login]: r } : a)), acc) , {})
             } catch (error) {
-              core.setFailed(`⚠️ Could not request team review: ${error.message}`)
+              await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
-            console.log("AFTER", context.payload.pull_request.requested_teams);
+            for (const reviewer in latestReviews) {
+              if (latestReviews[reviewer].state !== 'APPROVED') {
+                continue
+              }
+              try {
+                const membership = await github.rest.teams.getMembershipForUserInOrg({
+                  org: org,
+                  team_slug: team,
+                  username: reviewer,
+                });
 
+                if (membership.data.state == 'active') {
+                  await succeed(`✅ Approved by ${reviewer} on behalf of ${prettyTeamName}`)
+                }
+              } catch (error) {
+                if (error != 404) {
+                  await fail(`⚠️ Could not determine membership for ${reviewer} in ${prettyTeamName}: ${error}`)
+                }
+              }
+            }
 
+            await fail(`⚠️ No approvers found from ${prettyTeamName}`)
+
+      - name: Request team review
+        uses: actions/github-script@v7
+        env:
+          org: trufflejw
+          team: childteam
+        with:
+          github-token: ${{ secrets.GH_REVIEW_TOKEN }}
+          script: *runscript

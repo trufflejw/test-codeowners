@@ -1,2 +1,2 @@
 test/* @localsource
-* @j2fw
+* @localsource
