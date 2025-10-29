@@ -76,6 +76,8 @@ jobs:
               await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
 
+            console.warn(reviews);
+
             let approved = false;
             let changeRequesters = [];
             for (const login in reviews) {
