@@ -86,7 +86,7 @@ jobs:
                 }
               }
 
-              console.log("REVIEWS", reviews)
+              console.log("MEMBERSHIP", membership)
               if (membership.state === 'active') {
                 console.log("ACTIVE", login)
                 if (reviews[login].state === 'APPROVED') {
