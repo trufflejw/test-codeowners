@@ -72,7 +72,9 @@ jobs:
               const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
 
               for await (const page of iter) {
+                console.log("PAGE", page)
                 for (const review of page) {
+                  console.log("REVIEW", review)
                   const login = review.user.login
                   reviews[login] = (login in reviews) ? latestReview(reviews[login], review) : review
                 }
@@ -80,6 +82,8 @@ jobs:
             } catch (error) {
               await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
+
+            console.log("REVIEWERS", reviewers)
 
             for (const login in reviews) {
               if (reviews[login].state !== 'APPROVED') {
