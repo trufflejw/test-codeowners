@@ -6,6 +6,7 @@ on:
   pull_request_target:
     types: [opened, reopened, synchronize, review_request_removed]
 
+
 jobs:
   request-team-review:
     runs-on: ubuntu-latest
