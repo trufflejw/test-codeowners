@@ -30,7 +30,7 @@ jobs:
                 repo: context.repo.repo,
                 sha: context.payload.pull_request.head.sha,
                 state: state,
-                context: `product-eng-approval-${team}`,
+                context: `pr-approval-${team}`,
                 description: msg,
               });
             }
