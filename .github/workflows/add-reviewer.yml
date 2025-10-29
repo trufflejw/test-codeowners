@@ -80,7 +80,7 @@ jobs:
 
             console.log("REVIEWERS", reviews)
 
-            for (const login in reviews) {
+            for (const reviewer in reviews) {
               if (reviews[login].state !== 'APPROVED') {
                 continue
               }
