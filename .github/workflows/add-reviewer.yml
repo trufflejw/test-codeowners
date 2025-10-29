@@ -15,8 +15,8 @@ jobs:
       - name: Request team review
         uses: actions/github-script@v7
         env:
-          org: trufflejw
-          team: jeffteam
+          ORG: trufflejw
+          TEAM: jeffteam
         with:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
           # github-token: ${{ secrets.GH_APP_TOKEN }}
@@ -113,8 +113,8 @@ jobs:
       - name: Request team review
         uses: actions/github-script@v7
         env:
-          org: trufflejw
-          team: childteam
+          ORG: trufflejw
+          TEAM: childteam
         with:
           github-token: ${{ secrets.GH_REVIEW_TOKEN }}
           script: *runscript
