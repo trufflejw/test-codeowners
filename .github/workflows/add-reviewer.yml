@@ -21,6 +21,7 @@ jobs:
           script: |
             const teamSlug = "jeffteam";
 
+            console.log("BEFORE", context.payload.pull_request.requested_reviewers)
             console.log("BEFORE", context.payload.pull_request.requested_teams)
 
             try {
