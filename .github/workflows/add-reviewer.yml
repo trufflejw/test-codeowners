@@ -56,7 +56,7 @@ jobs:
 
             await status('pending', `Waiting for approval from ${prettyTeamName} team member`)
 
-            let latestReviews = {};
+            let reviews = {};
             try {
               const iter = octokit.paginate.iterator(github.rest.pulls.listReviews, {
                 owner: context.repo.owner,
@@ -68,8 +68,15 @@ jobs:
                 pages.push(p)
               }
 
-              const laterThan = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
-              latestReviews = pages.reduce((acc, page) => page.data.reduce((a, r) => ((!(r.user.login in a) || laterThan(r, a[r.user.login]) ? { ...a, [r.user.login]: r } : a)), acc) , {})
+              // latestReview returns the more recently submitted of 2 reviews
+              const latestReview = (a, b) => new Date(a.submitted_at) > new Date(b.submitted_at) ? a : b;
+
+              for await (const page of iter) {
+                for (const review of page) {
+                  const login = review.user.login
+                  reviews[login] = (login in reviews) ? latestReview(reviews[login], review) : review
+                }
+              }
             } catch (error) {
               await fail(`⚠️ Could not get reviews: ${error.status}`);
             }
