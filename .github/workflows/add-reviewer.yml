@@ -6,6 +6,7 @@ on:
     types: ["completed"]
 
 permissions:
+  pull-requests: read
   actions: read
   # checks: write  # (optional) if you want to create check runs
 
@@ -26,6 +27,9 @@ jobs:
             const headSha = wr.head_sha;
             const headBranch = first?.head?.ref ?? wr.head_branch;
             const headRepo = first?.head?.repo?.name ?? wr.head_repository?.name;
+            console.log("owner:", context.payload.workflow_run.head_repository.owner.login)
+            console.log("reponame:", context.payload.workflow_run.repository.name)
+            console.log("headsha:", headSha)
 
             if (!prNumber) {
               console.log("owner:", context.payload.workflow_run.head_repository.owner.login)
