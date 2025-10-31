@@ -6,8 +6,7 @@ on:
     types: ["completed"]
 
 permissions:
-  contents: read
-  pull-requests: write
+  pull-requests: read
   actions: read
   # checks: write  # (optional) if you want to create check runs
 
@@ -32,15 +31,7 @@ jobs:
         name: Extract PR from workflow_run payload (fallback to REST if empty)
         uses: actions/github-script@v7
         with:
-          github-token: ${{ steps.app-token.outputs.token }}
           script: |
-            console.log("OWNER:", context.payload.workflow_run.repository.owner.login)
-            console.log("REPO:", context.payload.workflow_run.repository.full_name)
-            // console.log("CONTEXT:", context);
-            // console.log("PAYLOAD:", context.payload);
-            // console.log("WORKFLOW_RUN:", context.payload.workflow_run);
-            // console.log("ACTOR:", context.payload.workflow_run.actor);
-            // console.log("TRIGGERING_ACTOR:", context.payload.workflow_run.triggering_actor);
             const wr = context.payload.workflow_run;
             const first = (wr.pull_requests || [])[0];
 
