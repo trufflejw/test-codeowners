@@ -37,8 +37,8 @@ jobs:
               console.log("headsha:", headSha)
               // Fallback: map commit → PR(s)
               const res = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                owner: context.payload.workflow_run.repository.owner.login,
-                repo: context.payload.workflow_run.repository.name,
+                owner: context.payload.workflow_run.head_repository.owner.login,
+                repo: context.payload.workflow_run.head_repository.name,
                 commit_sha: headSha,
               });
               prNumber = res.data[0]?.number ?? null;
