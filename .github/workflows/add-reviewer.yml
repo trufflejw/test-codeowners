@@ -26,11 +26,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log("CONTEXT:", context);
-            console.log("PAYLOAD:", context.payload);
-            console.log("WORKFLOW_RUN:", context.payload.workflow_run);
-            console.log("ACTOR:", context.payload.workflow_run.actor);
-            console.log("TRIGGERING_ACTOR:", context.payload.workflow_run.triggering_actor);
+            console.log("OWNER:", context.payload.workflow_run.owner)
+            console.log("REPO:", context.payload.workflow_run.repo)
+            // console.log("CONTEXT:", context);
+            // console.log("PAYLOAD:", context.payload);
+            // console.log("WORKFLOW_RUN:", context.payload.workflow_run);
+            // console.log("ACTOR:", context.payload.workflow_run.actor);
+            // console.log("TRIGGERING_ACTOR:", context.payload.workflow_run.triggering_actor);
             const wr = context.payload.workflow_run;
             const first = (wr.pull_requests || [])[0];
 
