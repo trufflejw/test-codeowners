@@ -27,6 +27,7 @@ jobs:
         with:
           script: |
             console.log("CONTEXT:", context);
+            console.log("PAYLOAD:", context.payload);
             console.log("WORKLOAD_RUN:", context.payload.workload_run);
             console.log("ACTOR:", context.payload.workload_run.actor);
             console.log("TRIGGERING_ACTOR:", context.payload.workload_run.triggering_actor);
