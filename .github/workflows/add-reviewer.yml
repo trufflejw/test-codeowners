@@ -49,6 +49,7 @@ jobs:
                 commit_sha: headSha,
               });
               prNumber = res.data[0]?.number ?? null;
+              console.log(res)
             }
 
             core.setOutput('pr_number', prNumber ?? '');
