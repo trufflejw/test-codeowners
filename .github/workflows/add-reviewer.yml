@@ -51,10 +51,10 @@ jobs:
               console.log(res)
             }
 
-            core.setOutput('pr_number', prNumber ?? '');
-            core.setOutput('head_sha', headSha ?? '');
-            core.setOutput('head_branch', headBranch ?? '');
-            core.setOutput('head_repo', headRepo ?? '');
+            console.log('pr_number', prNumber ?? '');
+            console.log('head_sha', headSha ?? '');
+            console.log('head_branch', headBranch ?? '');
+            console.log('head_repo', headRepo ?? '');
 
       - name: Comment what we resolved
         if: ${{ steps.out.outputs.pr_number != '' }}
