@@ -6,6 +6,55 @@ on:
     types: ["completed"]
 
 jobs:
+  resolve-pr:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.out.outputs.pr_number }}
+      head_sha:  ${{ steps.out.outputs.head_sha }}
+      head_repo: ${{ steps.out.outputs.head_repo }}
+      head_branch: ${{ steps.out.outputs.head_branch }}
+    steps:
+      - id: out
+        name: Extract PR from workflow_run payload (fallback to REST if empty)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const wr = context.payload.workflow_run;
+            const first = (wr.pull_requests || [])[0];
+
+            let prNumber = first?.number ?? null;
+            const headSha = wr.head_sha;
+            const headBranch = first?.head?.ref ?? wr.head_branch;
+            const headRepo = first?.head?.repo?.full_name ?? wr.head_repository?.full_name;
+
+            if (!prNumber) {
+              // Fallback: map commit → PR(s)
+              const res = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: headSha,
+              });
+              prNumber = res.data[0]?.number ?? null;
+            }
+
+            core.setOutput('pr_number', prNumber ?? '');
+            core.setOutput('head_sha', headSha ?? '');
+            core.setOutput('head_branch', headBranch ?? '');
+            core.setOutput('head_repo', headRepo ?? '');
+
+      - name: Comment what we resolved
+        if: ${{ steps.out.outputs.pr_number != '' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: Number("${{ steps.out.outputs.pr_number }}"),
+              body: `🔐 Privileged run.\nHead: \`${{ steps.out.outputs.head_repo }}@${{ steps.out.outputs.head_branch }}\`\nSHA: \`${{ steps.out.outputs.head_sha }}\``
+            });
+
   approval:
     runs-on: ubuntu-latest
     steps:
