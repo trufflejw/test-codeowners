@@ -58,7 +58,7 @@ jobs:
             const first = (wr.pull_requests || [])[0];
 
             let prNumber = first?.number ?? null;
-            const owner = context.payload.workflow_run.head_repository.owner.login
+            const owner = context.payload.workflow_run.repository.owner.login
             const headSha = wr.head_sha;
             const headBranch = first?.head?.ref ?? wr.head_branch;
             const headRepo = first?.head?.repo?.full_name ?? wr.head_repository?.full_name;
