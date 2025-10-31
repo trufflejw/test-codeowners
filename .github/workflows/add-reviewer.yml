@@ -2,7 +2,7 @@ name: PR Approval Check 2
 
 on:
   workflow_run:
-    workflows: ["Receive PR"]
+    workflows: ["Receive PR 2"]
     types: ["completed"]
 
 jobs:
