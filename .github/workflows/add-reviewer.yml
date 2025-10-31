@@ -22,7 +22,7 @@ jobs:
           BLAH: ${{ github.event.workflow_run.pull_requests[0].number }}
         with:
           script: |
-            console.log(process.env.BLAH)
+            console.log("BLAH:", process.env.BLAH)
 
       - name: Require Product Eng approval
         uses: trufflesecurity/pr-approval-check@workflow-triggered
