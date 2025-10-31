@@ -27,6 +27,8 @@ jobs:
         with:
           script: |
             console.log("CONTEXT:", context);
+            console.log("WORKLOAD_RUN:", context.payload.workload_run);
+            console.log("ACTOR:", context.payload.workload_run.actor);
             const wr = context.payload.workflow_run;
             const first = (wr.pull_requests || [])[0];
 
