@@ -5,6 +5,11 @@ on:
     workflows: ["Receive PR 2"]
     types: ["completed"]
 
+permissions:
+  pull-requests: write
+  actions: read
+  # checks: write  # (optional) if you want to create check runs
+
 jobs:
   resolve-pr:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -20,6 +25,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            console.log("CONTEXT:", context);
             const wr = context.payload.workflow_run;
             const first = (wr.pull_requests || [])[0];
 
