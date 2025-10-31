@@ -2,7 +2,7 @@ name: PR Approval Check
 
 on:
   workflow_run:
-    workflows: ['PR Bridge']
+    workflows: ['Receive PR']
     types: [completed]
 
 jobs:
