@@ -19,11 +19,9 @@ jobs:
       - name: blah
         uses: actions/github-script@v7
         env:
-          BLAH: ${{ github.event.workflow_run }}
+          BLAH: ${{ github.event.workflow_run.pull_requests[0].full_name }}
         with:
           script: |
-            console.log(github)
-            console.log(github.event)
             console.log(process.env.BLAH)
 
       - name: Require Product Eng approval
