@@ -18,9 +18,10 @@ jobs:
 
       - name: blah
         uses: actions/github-script@v7
-        script: |
-          console.log(github)
-          console.log(github.event)
+        with:
+          script: |
+            console.log(github)
+            console.log(github.event)
 
       - name: Require Product Eng approval
         uses: trufflesecurity/pr-approval-check@workflow-triggered
