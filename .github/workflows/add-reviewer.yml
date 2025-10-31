@@ -28,6 +28,9 @@ jobs:
             const headRepo = first?.head?.repo?.name ?? wr.head_repository?.name;
 
             if (!prNumber) {
+              console.log("owner:", context.payload.workflow_run.head_repository.owner.login)
+              console.log("reponame:", context.payload.workflow_run.repository.name)
+              console.log("headsha:", headSha)
               // Fallback: map commit → PR(s)
               const res = await github.rest.repos.listPullRequestsAssociatedWithCommit({
                 owner: context.payload.workflow_run.head_repository.owner.login,
