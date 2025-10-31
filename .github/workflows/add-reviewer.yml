@@ -6,6 +6,7 @@ on:
     types: ["completed"]
 
 permissions:
+  contents: read
   pull-requests: write
   actions: read
   # checks: write  # (optional) if you want to create check runs
