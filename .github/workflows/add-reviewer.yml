@@ -18,9 +18,9 @@ jobs:
 
       - name: blah
         uses: actions/github-script@v7
-        env:
-          BLAH: ${{ github.event.workflow_run }}
         with:
+          env:
+            BLAH: ${{ github.event.workflow_run }}
           script: |
             console.log(github)
             console.log(github.event)
