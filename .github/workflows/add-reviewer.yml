@@ -26,7 +26,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log("OWNER:", context.payload.workflow_run.repository.owner)
+            console.log("OWNER:", context.payload.workflow_run.repository.owner.login)
             console.log("REPO:", context.payload.workflow_run.repository.full_name)
             // console.log("CONTEXT:", context);
             // console.log("PAYLOAD:", context.payload);
@@ -44,7 +44,7 @@ jobs:
             if (!prNumber) {
               // Fallback: map commit → PR(s)
               const res = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                owner: context.payload.workflow_run.repository.owner,
+                owner: context.payload.workflow_run.repository.owner.login,
                 repo: context.payload.workflow_run.repository.name,
                 commit_sha: headSha,
               });
