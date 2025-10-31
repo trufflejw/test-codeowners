@@ -20,8 +20,8 @@ jobs:
       - name: Require Product Eng approval
         uses: trufflesecurity/pr-approval-check@v1
         with:
-          org: trufflesecurity
-          approver_team: product-eng
+          org: trufflejw
+          approver_team: jeffteam
           github_token: ${{ steps.app-token.outputs.token }}
 
 
