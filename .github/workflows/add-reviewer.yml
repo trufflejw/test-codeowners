@@ -6,7 +6,6 @@ on:
     types: ["completed"]
 
 permissions:
-  pull-requests: read
   actions: read
   # checks: write  # (optional) if you want to create check runs
 
@@ -48,7 +47,6 @@ jobs:
                 commit_sha: headSha,
               });
               prNumber = res.data[0]?.number ?? null;
-              console.log(res)
             }
 
             console.log('pr_number', prNumber ?? '');
