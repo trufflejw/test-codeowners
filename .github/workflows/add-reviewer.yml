@@ -61,7 +61,7 @@ jobs:
             const owner = context.payload.workflow_run.repository.owner.login
             const headSha = wr.head_sha;
             const headBranch = first?.head?.ref ?? wr.head_branch;
-            const headRepo = first?.head?.repo?.full_name ?? wr.head_repository?.full_name;
+            const headRepo = first?.head?.repo?.name ?? wr.head_repository?.name;
 
             if (!prNumber) {
               // Fallback: map commit → PR(s)
