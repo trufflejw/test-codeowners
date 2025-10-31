@@ -19,6 +19,7 @@ jobs:
       - name: blah
         uses: actions/github-script@v7
         script: |
+          console.log(github)
           console.log(github.event)
 
       - name: Require Product Eng approval
