@@ -15,16 +15,28 @@ jobs:
   resolve-pr:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    steps:
+
+  approval:
+    runs-on: ubuntu-latest
     outputs:
       pr_number: ${{ steps.out.outputs.pr_number }}
       head_sha:  ${{ steps.out.outputs.head_sha }}
       head_repo: ${{ steps.out.outputs.head_repo }}
       head_branch: ${{ steps.out.outputs.head_branch }}
     steps:
+      - name: Mint installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2.1.4
+        with:
+          app-id: ${{ secrets.PR_APPROVAL_CHECK_APP_ID }}
+          private-key: ${{ secrets.PR_APPROVAL_CHECK }}
+
       - id: out
         name: Extract PR from workflow_run payload (fallback to REST if empty)
         uses: actions/github-script@v7
         with:
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             // console.log("CONTEXT:", context);
             // console.log("PAYLOAD:", context.payload);
@@ -65,16 +77,6 @@ jobs:
               issue_number: Number("${{ steps.out.outputs.pr_number }}"),
               body: `🔐 Privileged run.\nHead: \`${{ steps.out.outputs.head_repo }}@${{ steps.out.outputs.head_branch }}\`\nSHA: \`${{ steps.out.outputs.head_sha }}\``
             });
-
-  approval:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Mint installation token
-        id: app-token
-        uses: actions/create-github-app-token@v2.1.4
-        with:
-          app-id: ${{ secrets.PR_APPROVAL_CHECK_APP_ID }}
-          private-key: ${{ secrets.PR_APPROVAL_CHECK }}
 
       - name: blah
         uses: actions/github-script@v7
