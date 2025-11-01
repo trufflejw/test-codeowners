@@ -42,7 +42,7 @@ jobs:
       - name: Read inputs
         id: get-prnum
         run: |
-          echo "pr=$(<prnum.txt)" >> "$GITHUB_OUTPUT"
+          echo "prnum=$(<prnum.txt)" >> "$GITHUB_OUTPUT"
 
       - name: Mint installation token
         id: app-token
@@ -59,7 +59,7 @@ jobs:
           owner: ${{ steps.get-pr.outputs.owner }}
           repo: ${{ steps.get-pr.outputs.head_repo }}
           head: ${{ steps.get-pr.outputs.head_sha }}
-          number: ${{ steps.get-prnum.outputs.pr_number }}
+          number: ${{ steps.get-prnum.outputs.prnum }}
           github_token: ${{ steps.app-token.outputs.token }}
 
 
