@@ -36,7 +36,6 @@ jobs:
         with:
           run-id: ${{ github.event.workflow_run.id }}
           name: prnum
-          path: prnum.txt
           github-token: ${{ github.token }}
 
       - name: Read inputs
