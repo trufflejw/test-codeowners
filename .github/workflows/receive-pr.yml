@@ -7,10 +7,11 @@ on:
     types: [submitted, edited, dismissed]
 
 jobs:
-  set-pending:
-    name: Set pending status
+  prepare:
+    name: Determine and Dispatch PR
     runs-on: ubuntu-latest
     permissions:
+      pull-requests: write
       statuses: write
     steps:
       - name: Set pending status
@@ -25,10 +26,6 @@ jobs:
               description: 'Checking for team approval',
               context: 'pr-approval-check'
             });
-  prnum:
-    name: Determine and Dispatch PR
-    runs-on: ubuntu-latest
-    steps:
       - name: Determine PR Number
         id: build
         run: |
