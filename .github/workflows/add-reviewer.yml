@@ -19,6 +19,8 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            console.log("CONTEXT", context)
+            console.log("====")
             const wr = context.payload.workflow_run;
             const first = (wr.pull_requests || [])[0];
 
