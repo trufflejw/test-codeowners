@@ -19,15 +19,13 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            console.log(pr.head)
-            console.log(pr.base)
-            console.log("pr.base.owner.login:", pr.base.owner.login)
-            console.log("pr.base.name:", pr.base.name)
-            console.log("pr.head.head_sha:", pr.head.head_sha)
+            console.log("pr.base.repo.owner.login:", pr.base.repo.owner.login)
+            console.log("pr.base.repo.name:", pr.base.repo.name)
+            console.log("pr.head.sha:", pr.head.sha)
             github.rest.repos.createCommitStatus({
-              owner: pr.base.owner.login,
-              repo: pr.base.owner.repo,
-              sha: pr.head.head_sha,
+              owner: pr.base.repo.owner.login,
+              repo: pr.base.repo.name,
+              sha: pr.head.sha,
               state: 'pending',
               description: 'Checking for team approval',
               context: 'pr-approval-check'
