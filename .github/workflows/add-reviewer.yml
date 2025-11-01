@@ -23,8 +23,8 @@ jobs:
             const first = (wr.pull_requests || [])[0];
 
             let prNumber = first?.number ?? null;
-            const owner = context.payload.workflow_run.repository.owner.login
-            const headRepo = first?.head?.repo?.name ?? wr.head_repository?.name;
+            const owner = wr.repository.owner.login
+            const headRepo = wr.repository.name;
             const headSha = wr.head_sha;
 
             core.setOutput('owner', owner ?? '');
@@ -42,7 +42,7 @@ jobs:
       - name: Read inputs
         id: get-prnum
         run: |
-          echo "prnum=$(<prnum.txt)" >> "$GITHUB_OUTPUT"
+          echo "prnum=xyz$(cat prnum.txt)" >> "$GITHUB_OUTPUT"
 
       - name: Mint installation token
         id: app-token
