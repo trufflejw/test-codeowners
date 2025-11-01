@@ -28,7 +28,7 @@ jobs:
             const headBranch = first?.head?.ref ?? wr.head_branch;
             const headRepo = first?.head?.repo?.name ?? wr.head_repository?.name;
 
-            console.log(json.dumps(context))
+            console.log(toJSON(context))
 
             console.error("HEAD_REPOSITORY", context.payload.workflow_run.head_repository);
             console.error("REPOSITORY", context.payload.workflow_run.repository);
