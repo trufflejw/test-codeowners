@@ -19,8 +19,6 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            console.log(pr.head)
-            console.log(pr.base)
             console.log("pr.base.repo.owner.login:", pr.base.repo.owner.login)
             console.log("pr.base.repo.name:", pr.base.repo.name)
             console.log("pr.head.sha:", pr.head.sha)
