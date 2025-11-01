@@ -2,11 +2,10 @@ name: PR Approval Check
 
 on:
   workflow_run:
-    workflows: ["Receive PR 2"]
+    workflows: ["Receive PR"]
     types: ["completed"]
 
 permissions:
-  pull-requests: read
   actions: read
   # checks: write  # (optional) if you want to create check runs
 
@@ -24,7 +23,7 @@ jobs:
       - name: Read inputs
         id: get-prnum
         run: |
-          find .
+          set -euo pipefail
           echo "prnum=$(cat prnum.txt)" >> "$GITHUB_OUTPUT"
 
       - name: Mint installation token
