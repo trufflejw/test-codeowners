@@ -20,11 +20,11 @@ jobs:
           script: |
             console.log("context.repo.owner:", context.repo.owner)
             console.log("context.repo.repo:", context.repo.repo)
-            console.log("context.head_sha:", context.head_sha)
+            console.log("context.sha:", context.sha)
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
-              repo: context.repo.name,
-              sha: context.head_sha,
+              repo: context.repo.repo,
+              sha: context.sha,
               state: 'pending',
               description: 'Checking for team approval',
               context: 'pr-approval-check'
