@@ -42,7 +42,8 @@ jobs:
       - name: Read inputs
         id: get-prnum
         run: |
-          echo "prnum=xyz$(cat prnum.txt)" >> "$GITHUB_OUTPUT"
+          find .
+          echo "prnum=$(cat prnum.txt)" >> "$GITHUB_OUTPUT"
 
       - name: Mint installation token
         id: app-token
