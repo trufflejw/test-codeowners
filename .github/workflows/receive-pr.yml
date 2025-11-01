@@ -11,7 +11,7 @@ jobs:
     name: Set pending status
     runs-on: ubuntu-latest
     permissions:
-      status: write
+      statuses: write
     steps:
       - name: Set pending status
         uses: actions/github-script@v7
