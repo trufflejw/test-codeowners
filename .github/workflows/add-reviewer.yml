@@ -40,7 +40,7 @@ jobs:
           # github-token: ${{ github.token }}
 
       - name: Read inputs
-        id: get-pr
+        id: get-prnum
         run: |
           echo "pr=$(<prnum.txt)" >> "$GITHUB_OUTPUT"
 
@@ -59,7 +59,7 @@ jobs:
           owner: ${{ steps.get-pr.outputs.owner }}
           repo: ${{ steps.get-pr.outputs.head_repo }}
           head: ${{ steps.get-pr.outputs.head_sha }}
-          number: ${{ steps.get-pr.outputs.pr_number }}
+          number: ${{ steps.get-prnum.outputs.pr_number }}
           github_token: ${{ steps.app-token.outputs.token }}
 
 
