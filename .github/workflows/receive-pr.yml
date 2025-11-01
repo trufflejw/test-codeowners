@@ -1,4 +1,4 @@
-name: "Receive PR 2"
+name: "Receive PR"
 
 on:
   pull_request_target:
