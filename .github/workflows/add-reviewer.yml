@@ -39,7 +39,7 @@ jobs:
         with:
           org: trufflejw
           approver_team: jeffteam
-          owner: ${{ github.event.workflow_run.owner.login }}
+          owner: ${{ github.event.workflow_run.repository.owner.login }}
           repo: ${{ github.event.workflow_run.repository.name }}
           head: ${{ github.event.workflow_run.head_sha }}
           number: ${{ steps.get-prnum.outputs.prnum }}
