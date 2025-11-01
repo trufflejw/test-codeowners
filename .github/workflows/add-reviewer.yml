@@ -31,7 +31,7 @@ jobs:
             console.log("head_repository.full_name:", context.payload.workflow_run.head_repository.full_name);
             console.log("repository.full_name:", context.payload.workflow_run.repository.full_name);
 
-            // console.error("HEAD_REPOSITORY", context.payload.workflow_run.head_repository);
+            console.error("payload", context.payload);
             // console.error("REPOSITORY", context.payload.workflow_run.repository);
             // console.error("HEAD_COMMIT", context.payload.workflow_run.head_commit);
 
