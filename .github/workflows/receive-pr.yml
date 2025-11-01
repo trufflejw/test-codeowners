@@ -10,14 +10,20 @@ permissions:
   contents: read
 
 jobs:
-  noop:
+  prnum:
     name: Baseline check
     runs-on: ubuntu-latest
     steps:
-      - run: echo "This is the required check."
-      - id: stuff
-        name: Extract PR from workflow_run payload or Github REST API
-        uses: actions/github-script@v7
+      - name: Determine PR Number
+        id: build
+        run: |
+          echo "PR: ${{ github.event.pull_request.number }}"
+          echo "${{ github.event.pull_request.number }}" > pr_number.txt
+
+      - name: Submit
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            console.log(context)
+          name: prnum
+          path: prnum.txt
+          retention-days: 1
+
