@@ -28,16 +28,17 @@ jobs:
             const headBranch = first?.head?.ref ?? wr.head_branch;
             const headRepo = first?.head?.repo?.name ?? wr.head_repository?.name;
 
-            console.log(context.toJSON());
+            console.log("head_repository.full_name:", context.payload.workflow_run.head_repository.full_name);
+            console.log("repository.full_name:", context.payload.workflow_run.repository.full_name);
 
-            console.error("HEAD_REPOSITORY", context.payload.workflow_run.head_repository);
-            console.error("REPOSITORY", context.payload.workflow_run.repository);
-            console.error("HEAD_COMMIT", context.payload.workflow_run.head_commit);
+            // console.error("HEAD_REPOSITORY", context.payload.workflow_run.head_repository);
+            // console.error("REPOSITORY", context.payload.workflow_run.repository);
+            // console.error("HEAD_COMMIT", context.payload.workflow_run.head_commit);
 
             if (!prNumber) {
-              console.log("owner:", context.payload.workflow_run.head_repository.owner.login)
-              console.log("reponame:", context.payload.workflow_run.head_repository.name)
-              console.log("headsha:", headSha)
+              // console.log("owner:", context.payload.workflow_run.head_repository.owner.login)
+              // console.log("reponame:", context.payload.workflow_run.head_repository.name)
+              // console.log("headsha:", headSha)
               // Fallback: map commit → PR(s)
               const res = await github.rest.repos.listPullRequestsAssociatedWithCommit({
                 owner: context.payload.workflow_run.head_repository.owner.login,
