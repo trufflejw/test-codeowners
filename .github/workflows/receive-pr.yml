@@ -15,4 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "This is the required check."
-
+      - id: stuff
+        name: Extract PR from workflow_run payload or Github REST API
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log(context)
