@@ -8,7 +8,7 @@ on:
 
 jobs:
   prnum:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Determine PR Number
         id: build
